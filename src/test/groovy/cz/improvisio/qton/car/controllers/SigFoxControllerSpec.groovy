@@ -17,7 +17,7 @@ class SigFoxControllerSpec extends Specification {
 	void setup() {
 		sigFoxController.SENSOR = 24
 		sigFoxController.MOVEMENT = 4
-		sigFoxController.HEARTBEAT = 12
+		sigFoxController.HEARTBEAT = 16
 	}
 
 	void cleanup() {}
@@ -44,7 +44,7 @@ class SigFoxControllerSpec extends Specification {
 			sigFoxController.parseData(data) == result
 
 		where:
-			data << ["0000e0410000a44100002842", "4040", "ac4266666641"]
+			data << ["0000e0410000a44100002842", "4040", "0000ac4266666641"]
 			result << [
 					["co2": 42, "humidity": 20.5f, "temperature": 28],
 					["movement": 3],

@@ -113,9 +113,9 @@ class SigFoxController {
 				rv.movement = Float.intBitsToFloat(Integer.reverseBytes(i.intValue()))
 				break
 			case HEARTBEAT:
-				Long i = Long.parseLong(data[0..3], 16)
+				Long i = Long.parseLong(data[0..7], 16)
 				rv.battery = Float.intBitsToFloat(Integer.reverseBytes(i.intValue()))
-				i = Long.parseLong(data[4..11], 16)
+				i = Long.parseLong(data[8..15], 16)
 				rv.engineStartAcceleration = Float.intBitsToFloat(Integer.reverseBytes(i.intValue()))
 				break
 		}
