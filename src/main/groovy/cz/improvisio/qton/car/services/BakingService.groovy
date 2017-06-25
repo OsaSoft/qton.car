@@ -17,7 +17,6 @@ class BakingService {
 
 	int personInside(Temperature temperature, CO2 co2, Humidity humidity) {
 		def prevCo2 = co2Repository.findFirstByTimestampLessThanOrderByTimestampDesc(co2.timestamp)
-		println("co $co2.id prev $prevCo2.id")
 
 		if (prevCo2.value > co2.value || co2.value <= 1000) return 0
 		if (co2.value > 1000) return 1
