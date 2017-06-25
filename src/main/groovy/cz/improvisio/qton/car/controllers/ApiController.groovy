@@ -54,7 +54,6 @@ class ApiController {
 		rv.humidity = humidity?.value
 		rv.timestamp = temperature?.timestamp
 		rv.personInside = bakingService.personInside(temperature, co2, humidity)
-//		rv.inMovement = TODO
 
 		return new JsonBuilder(rv).toString()
 	}
@@ -67,6 +66,34 @@ class ApiController {
 		def rv = [:]
 		rv.user =  marshallingService.marshallShort(userRepository.findByUsername("user1")).content //TODO: change to proper login logic and stuff
 		rv.temperatures = temperatureRepository.findAllByTimestampBetween(fromDate.time, toDate.time).collect {
+			marshallingService.marshallShort(it).content
+		}
+
+		new JsonBuilder(rv).toString()
+	}
+
+	@GetMapping(path = "/humidity")
+	@ResponseBody String humidity(@RequestParam long from, @RequestParam long to) {
+		def fromDate = new Date(from)
+		def toDate = new Date(to)
+
+		def rv = [:]
+		rv.user =  marshallingService.marshallShort(userRepository.findByUsername("user1")).content //TODO: change to proper login logic and stuff
+		rv.humidities = humidityRepository.findAllByTimestampBetween(fromDate.time, toDate.time).collect {
+			marshallingService.marshallShort(it).content
+		}
+
+		new JsonBuilder(rv).toString()
+	}
+
+	@GetMapping(path = "/co2")
+	@ResponseBody String co2(@RequestParam long from, @RequestParam long to) {
+		def fromDate = new Date(from)
+		def toDate = new Date(to)
+
+		def rv = [:]
+		rv.user =  marshallingService.marshallShort(userRepository.findByUsername("user1")).content //TODO: change to proper login logic and stuff
+		rv.co2s = co2Repository.findAllByTimestampBetween(fromDate.time, toDate.time).collect {
 			marshallingService.marshallShort(it).content
 		}
 

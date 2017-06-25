@@ -9,4 +9,6 @@ import org.springframework.data.repository.CrudRepository
 interface HumidityRepository extends CrudRepository<Humidity, Long> {
 
 	Humidity findByTimestamp(long l)
+
+	Humidity findAllByTimestampBetween(long from, long to)
 }

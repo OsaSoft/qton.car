@@ -8,4 +8,6 @@ import org.springframework.data.repository.CrudRepository
  */
 interface CO2Repository extends CrudRepository<CO2, Long> {
 	CO2 findByTimestamp(long l)
+
+	CO2 findAllByTimestampBetween(long from, long to)
 }
