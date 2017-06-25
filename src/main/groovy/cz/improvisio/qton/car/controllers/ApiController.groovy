@@ -1,7 +1,10 @@
 package cz.improvisio.qton.car.controllers
 
+import cz.improvisio.qton.car.entities.CO2
+import cz.improvisio.qton.car.entities.Humidity
 import cz.improvisio.qton.car.entities.Temperature
 import cz.improvisio.qton.car.repositories.CO2Repository
+import cz.improvisio.qton.car.repositories.HumidityRepository
 import cz.improvisio.qton.car.repositories.TemperatureRepository
 import cz.improvisio.qton.car.repositories.UserRepository
 import cz.improvisio.qton.car.services.BakingService
@@ -29,6 +32,8 @@ class ApiController {
 	@Autowired
 	TemperatureRepository temperatureRepository
 	@Autowired
+	HumidityRepository humidityRepository
+	@Autowired
 	CO2Repository co2Repository
 
 	@Autowired
@@ -41,23 +46,30 @@ class ApiController {
 		def rv = [:]
 		rv.user =  marshallingService.marshallShort(userRepository.findByUsername("user1")).content //TODO: change to proper login logic and stuff
 		Temperature temperature = temperatureRepository.findFirstByOrderByTimestampDesc()
+		CO2 co2 = co2Repository.findByTimestamp(temperature?.timestamp)
+		Humidity humidity = humidityRepository.findByTimestamp(temperature?.timestamp)
 
 		rv.temperature = temperature?.value
+		rv.co2 = co2?.value
+		rv.humidity = humidity?.value
 		rv.timestamp = temperature?.timestamp
-		rv.personInside = bakingService.personInside(temperature)
+		rv.personInside = bakingService.personInside(temperature, co2, humidity)
 //		rv.inMovement = TODO
 
 		return new JsonBuilder(rv).toString()
 	}
 
 	@GetMapping(path = "/temperature")
-	@ResponseBody String temperature(@RequestParam Date from, @RequestParam Date to) {
-		def temps = temperatureRepository.findAllByTimestampBetween(from.time, to.time)
+	@ResponseBody String temperature(@RequestParam long from, @RequestParam long to) {
+		def fromDate = new Date(from)
+		def toDate = new Date(to)
 
-		if (to < new Date()) {
-			return JsonOutput.toJson(temps)
-		} else {
-			//TODO: calc future prediction
+		def rv = [:]
+		rv.user =  marshallingService.marshallShort(userRepository.findByUsername("user1")).content //TODO: change to proper login logic and stuff
+		rv.temperatures = temperatureRepository.findAllByTimestampBetween(fromDate.time, toDate.time).collect {
+			marshallingService.marshallShort(it).content
 		}
+
+		new JsonBuilder(rv).toString()
 	}
 }

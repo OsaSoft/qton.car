@@ -1,5 +1,7 @@
 package cz.improvisio.qton.car.services
 
+import cz.improvisio.qton.car.entities.CO2
+import cz.improvisio.qton.car.entities.Humidity
 import cz.improvisio.qton.car.entities.Temperature
 import org.springframework.stereotype.Service
 
@@ -9,7 +11,7 @@ import org.springframework.stereotype.Service
 @Service
 class BakingService {
 
-	boolean personInside(Temperature temperature) {
+	boolean personInside(Temperature temperature, CO2 co2, Humidity humidity) {
 		return true
 	}
 }
